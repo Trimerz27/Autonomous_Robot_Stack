@@ -23,5 +23,19 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+add_executable(motor_controller_node
+  src/motor_controller_node.cpp
+)
 
+ament_target_dependencies(
+  motor_controller_node
+  rclcpp
+  geometry_msgs
+  std_msgs
+)
+
+install(
+  TARGETS motor_controller_node
+  DESTINATION lib/${PROJECT_NAME}
+)
 ament_package()
