@@ -1,4 +1,4 @@
-# 🤖 Autonomous Robot Stack
+# Autonomous Robot Stack
 
 ![ROS 2](https://img.shields.io/badge/ROS%202-Jazzy-blue)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04-orange)
@@ -9,7 +9,7 @@ A modular ROS 2 robotics platform built in **C++** using **CMake**, designed as 
 
 ---
 
-# 📌 Project Overview
+# Project Overview
 
 This repository demonstrates the development of a complete robotics software stack using modern ROS 2 practices.
 
