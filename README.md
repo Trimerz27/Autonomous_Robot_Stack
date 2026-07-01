@@ -28,7 +28,7 @@ The long-term goal is to evolve this into a complete autonomous robot platform.
 
 ---
 
-# 🧰 Technologies Used
+# Technologies Used
 
 | Category | Technology |
 |---|---|
@@ -44,7 +44,7 @@ The long-term goal is to evolve this into a complete autonomous robot platform.
 
 ---
 
-# 📂 Repository Structure
+# Repository Structure
 
 ```text
 Autonomous_Robot_Stack/
@@ -78,7 +78,7 @@ Autonomous_Robot_Stack/
 
 ---
 
-# 🤖 Current Robot Model
+# Current Robot Model
 
 The current robot is a differential-drive style mobile platform.
 
@@ -100,7 +100,7 @@ TF structure:
 
 ---
 
-# 🔄 ROS 2 Architecture
+# ROS 2 Architecture
 
 Current system:
 
@@ -131,7 +131,7 @@ motor_controller_node
 
 ---
 
-# ⚙️ Build Instructions
+# Build Instructions
 
 ## Requirements
 
@@ -236,7 +236,7 @@ ros2 run tf2_tools view_frames
 
 ---
 
-# 🧪 Development Roadmap
+# Development Roadmap
 
 ## Completed
 
@@ -286,7 +286,7 @@ Designed as a portfolio project for robotics software engineering opportunities.
 
 ---
 
-# 👨‍💻 Author
+# Author
 
 Joel Trimmer
 
