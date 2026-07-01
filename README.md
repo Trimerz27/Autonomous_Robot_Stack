@@ -175,7 +175,7 @@ source install/setup.bash
 
 ---
 
-# ▶️ Running the Robot Visualization
+# Running the Robot Visualization
 
 Launch the robot:
 
@@ -191,7 +191,7 @@ This starts:
 
 ---
 
-# 🎮 Running the Controller
+# Running the Controller
 
 Start the controller node:
 
@@ -208,7 +208,7 @@ Example:
 
 ---
 
-# 🔎 Debugging Commands
+# Debugging Commands
 
 Check active nodes:
 
@@ -272,7 +272,7 @@ ros2 run tf2_tools view_frames
 
 ---
 
-# 🎯 Project Purpose
+# Project Purpose
 
 This project is built to demonstrate practical robotics software engineering skills:
 
