@@ -1,100 +1,49 @@
 <?xml version="1.0"?>
+<robot name="standard_vtol" xmlns:xacro="http://ros.org">
 
-<robot name="inspection_robot"
-       xmlns:xacro="http://ros.org/wiki/xacro">
-
-
-  <!-- Base -->
+  <!-- ==================== MAIN AIRFRAME (LEVEL SILVER PLANE) ==================== -->
   <link name="base_link">
-
-    <visual>
-      <geometry>
-        <box size="1.0 0.6 0.3"/>
-      </geometry>
-
-      <material name="blue">
-        <color rgba="0 0.2 0.8 1"/>
-      </material>
-
-    </visual>
-
-
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.05" ixy="0.0" ixz="0.0" iyy="0.05" iyz="0.0" izz="0.1"/>
+    </inertial>
     <collision>
       <geometry>
-        <box size="1.0 0.6 0.3"/>
+        <box size="0.6 0.8 0.15"/> 
       </geometry>
     </collision>
-
-
-    <inertial>
-      <mass value="10"/>
-      <inertia
-        ixx="0.1"
-        ixy="0"
-        ixz="0"
-        iyy="0.1"
-        iyz="0"
-        izz="0.1"/>
-    </inertial>
-
-  </link>
-
-
-
-  <!-- Left wheel -->
-  <link name="left_wheel">
-
     <visual>
+      <!-- RE-BALANCED AXES MAP TO POSITION PLANE LEVEL AND FACING FORWARD -->
+      <origin xyz="0 0 0.4" rpy="1.5708 0 -1.5708"/>
       <geometry>
-        <cylinder radius="0.15" length="0.1"/>
+        <mesh filename="file:///home/joel/robotics-portfolio/src/robot_description/meshes/x8_wing.dae" scale="0.001 0.001 0.001"/>
       </geometry>
-
     </visual>
-
   </link>
 
-
-  <joint name="left_wheel_joint"
-         type="continuous">
-
-    <parent link="base_link"/>
-    <child link="left_wheel"/>
-
-    <origin xyz="0 0.35 -0.15"
-            rpy="1.5708 0 0"/>
-
-    <axis xyz="0 1 0"/>
-
-  </joint>
-
-
-
-  <!-- Right wheel -->
-  <link name="right_wheel">
-
+  <!-- ==================== METALLIC SILVER FINISH ==================== -->
+  <gazebo reference="base_link">
     <visual>
-      <geometry>
-        <cylinder radius="0.15" length="0.1"/>
-      </geometry>
-
+      <material>
+        <ambient>0.75 0.75 0.75 1.0</ambient>
+        <diffuse>0.75 0.75 0.75 1.0</diffuse>
+        <specular>0.9 0.9 0.9 1.0</specular>
+        <emissive>0.0 0.0 0.0 1.0</emissive>
+      </material>
     </visual>
+  </gazebo>
 
-  </link>
-
-
-  <joint name="right_wheel_joint"
-         type="continuous">
-
-    <parent link="base_link"/>
-    <child link="right_wheel"/>
-
-    <origin xyz="0 -0.35 -0.15"
-            rpy="1.5708 0 0"/>
-
-    <axis xyz="0 1 0"/>
-
-  </joint>
-
+  <!-- ==================== GAZEBO ROS 3D MOVEMENT ENGINE ==================== -->
+  <gazebo>
+    <plugin name="vtol_flight_core" filename="libgazebo_ros_planar_move.so">
+      <command_topic>cmd_vel</command_topic>
+      <odometry_topic>odom</odometry_topic>
+      <odometry_frame>odom</odometry_frame>
+      <odometry_rate>30.0</odometry_rate>
+      <robot_base_frame>base_link</robot_base_frame>
+      <publish_odometry_tf>true</publish_odometry_tf>
+    </plugin>
+  </gazebo>
 
 </robot>
-

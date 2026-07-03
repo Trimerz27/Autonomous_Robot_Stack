@@ -38,4 +38,18 @@ install(
   TARGETS motor_controller_node
   DESTINATION lib/${PROJECT_NAME}
 )
+# Find standard ROS 2 dependencies
+find_package(rclcpp REQUIRED)
+find_package(geometry_msgs REQUIRED)
+
+# Declare and build the executable binary node
+add_executable(vtol_flight_node src/vtol_flight_node.cpp)
+ament_target_dependencies(vtol_flight_node rclcpp geometry_msgs)
+
+# Install the executable so ROS 2 can launch it
+install(TARGETS
+  vtol_flight_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 ament_package()
