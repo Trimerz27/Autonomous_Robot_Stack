@@ -5,7 +5,7 @@
 ![Language](https://img.shields.io/badge/Language-C++-brightgreen)
 ![Build](https://img.shields.io/badge/Build-CMake-red)
 
-A modular ROS 2 robotics platform built in **C++** using **CMake**, designed as a foundation for autonomous mobile robot development, simulation, perception, and navigation.
+A modular ROS 2 robotics platform built in C++ using CMake, designed as a foundation for autonomous mobile robot development, aerial simulation, perception, and navigation.
 
 ---
 
@@ -38,7 +38,7 @@ The long-term goal is to evolve this into a complete autonomous robot platform.
 | OS | Ubuntu 24.04 LTS |
 | Robot Modeling | URDF / Xacro |
 | Visualization | RViz2 |
-| Simulation (Planned) | Gazebo |
+| Simulation | Gazebo |
 | Navigation (Planned) | Nav2 |
 | Control (Planned) | ros2_control |
 
