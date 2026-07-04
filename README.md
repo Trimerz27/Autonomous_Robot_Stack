@@ -5,14 +5,19 @@
 ![Language](https://img.shields.io/badge/Language-C++-brightgreen)
 ![Build](https://img.shields.io/badge/Build-CMake-red)
 
-A modular ROS 2 robotics platform built in C++ using CMake, designed as a foundation for autonomous mobile robot development, aerial simulation, perception, and navigation.
+A modular, multi-agent ROS 2 robotics platform built in C++ using CMake, designed as a foundation for autonomous mobile robot development, cooperative swarm simulation, and closed-loop control tracking within space-themed low-gravity environments.
 
 ---
 
 # Project Overview
 
-This repository demonstrates the development of a complete robotics software stack using modern ROS 2 practices.
+This repository demonstrates the development of a complete multi-robot software stack using modern ROS 2 practices.
 
+The project features a coordinated Ground-to-Aerial Swarm Tracking Loop running inside modern Gazebo Sim:
+
+1. Ground Rover Target: A 4-wheeled planetary rover chassis running a continuous circular cruise trajectory over dark cosmic soil.
+
+2. Aerial Escort Jet: A hybrid metallic-silver fixed-wing VTOL airframe utilizing a zero-gravity hardware physics lock to maintain a stable flight altitude ceiling while continuously tracking the rover directly from above.
 The project currently includes:
 
 - Robot description and modeling
@@ -40,7 +45,7 @@ The long-term goal is to evolve this into a complete autonomous robot platform.
 | Visualization | RViz2 |
 | Simulation | Gazebo |
 | Navigation (Planned) | Nav2 |
-| Control (Planned) | ros2_control |
+| Network Layer | ros_gz_bridge (Asynchronous Telemetry/Actuation Mapping) |
 
 ---
 
@@ -49,26 +54,29 @@ The long-term goal is to evolve this into a complete autonomous robot platform.
 ```text
 Autonomous_Robot_Stack/
 │
-Autonomous_Robot_Stack/
-│
 └── src/
     ├── robot_bringup/
     │   └── launch/
-    │       └── vtol_simulation.launch.py   # Full system launch (Gz Sim + Robot State + Controllers)
+    │       └── vtol_simulation.launch.py   # Full multi-agent swarm deployment launch file
     │
     ├── robot_control/
+    │   ├── CMakeLists.txt                  # Authorized link references to standard nav_msgs
+    │   ├── package.xml                     # Integrated package dependencies manifest
     │   └── src/
-    │       ├── motor_controller_node.cpp    # Ground differential actuation hub
-    │       └── vtol_flight_node.cpp         # Autonomous 3D state machine flight controller (C++)
+    │       ├── motor_controller_node.cpp    # Ground vehicle circular cruising node (C++)
+    │       └── vtol_flight_node.cpp         # 2D relative closed-loop proportional flight tracker (C++)
     │
     ├── robot_description/
     │   ├── meshes/
+    │   │   ├── ground_vehicle/             # Omnidirectional vehicle spatial geometry files
     │   │   └── x8_wing.dae                  # Metallic silver VTOL airframe CAD asset
     │   └── urdf/
-    │       └── inspection_robot.urdf.xacro  # Level, scaled, 3D aerial kinematic configuration
+    │       └── inspection_robot.urdf.xacro  # Level, self-tracking aerial airframe description
     │
-    ├── robot_navigation/                    # Navigation and behavioral tracking (planned)
-    └── robot_perception/                    # Live sensor pipelines and transformations (planned)
+    └── robot_simulation/
+        ├── CMakeLists.txt                  # Directory distribution and data sharing rules
+        └── worlds/
+            └── space_target.sdf             # Embedded dark cosmic ground world configuration
 ```
 
 ---
@@ -78,16 +86,18 @@ Autonomous_Robot_Stack/
 The current robot is a differential-drive style mobile platform.
 
 1. Ground Robotics Mode
-   Kinematic Framework: Differential-drive mobile platform.
-   Actuation Profiles: Twin isolated wheel joint velocity limits.
-   TF Structure:text
-   base_link / \ left_wheel right_wheel
+   Physics Framework: Leverages the native gz-sim-velocity-control-system plugin embedded directly inside the      world file to actuate its wheels.
 
-2. Aerial Robotics Mode (VTOL Jet)
-   Airframe Asset: Highly detailed silver X8 flying wing fuselage mesh layout.
-   Spatial Constants: Scaled natively to metric workspace units (scale="0.001 0.001 0.001").
-   Default State: Starts level, parallel to the ground grid, elevated at a 2-foot floating altitude.
-   Simulation Physics: Controlled via the libgazebo_ros_planar_move.so 3D movement engine plugin.
+   Telemetry Broadcasting: Utilizes an integrated gz-sim-odometry-publisher-system to feed live location           tracking information to the network bridge on the /model/ground_robot/odometry channel.
+
+    Actuation Loop: Driven by motor_controller_node.cpp to run an ongoing, automated circular track across the      ground plane.
+
+3. Aerial Robotics Mode (VTOL Jet)
+  Altitude Stabilization: Configured with a <gravity>0</gravity> hardware physics override to eliminate           vertical drift, allowing the drone to stay floating level at its designated spawn altitude of 2.5 meters.
+
+   Proportional (P) Flight Control: The C++ vtol_flight_node subscribes asynchronously to both the ground rover's odometry and the jet's own telemetry tracking frames. It continuously calculates the exact relative distance gap between the two robots to adjust steering outputs on-the-fly:
+   {Error}_{x}=X_{target}}-X_{jet}
+   {Velocityx}=K_{p}\times {Error}_{x}
 ---
 
 # ROS 2 Architecture
@@ -289,4 +299,4 @@ Designed as a portfolio project for robotics software engineering opportunities.
 
 Joel Trimmer
 
-Robotics / Autonomous Systems Portfolio Project
+Robotics & Autonomous Systems Software Engineer Portfolio Project
