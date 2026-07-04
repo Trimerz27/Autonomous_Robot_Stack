@@ -1,90 +1,34 @@
-#include "rclcpp/rclcpp.hpp"
-#include "geometry_msgs/msg/twist.hpp"
-#include "std_msgs/msg/string.hpp"
+#include <chrono>
+#include <functional>
+#include <memory>
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/twist.hpp>
 
-using std::placeholders::_1;
+using namespace std::chrono_literals;
 
-class MotorController : public rclcpp::Node
-{
+class GroundTargetController : public rclcpp::Node {
 public:
-    MotorController()
-    : Node("motor_controller")
-    {
-        this->declare_parameter("max_speed", 1.0);
-
-        max_speed_ = this->get_parameter("max_speed")
-                         .as_double();
-
-        cmd_subscriber_ =
-            this->create_subscription<geometry_msgs::msg::Twist>(
-                "/cmd_vel",
-                10,
-                std::bind(
-                    &MotorController::cmd_callback,
-                    this,
-                    _1));
-
-        status_publisher_ =
-            this->create_publisher<std_msgs::msg::String>(
-                "/motor_status",
-                10);
-
-        timer_ = this->create_wall_timer(
-            std::chrono::seconds(1),
-            std::bind(
-                &MotorController::publish_status,
-                this));
-
-        RCLCPP_INFO(
-            this->get_logger(),
-            "Motor Controller started. Max speed: %.2f",
-            max_speed_);
+    GroundTargetController() : Node("motor_controller_node") {
+        // Hardcoded straight to the native Gazebo Sim bridge topic
+        publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("/model/ground_robot/cmd_vel", 10);
+        timer_ = this->create_wall_timer(100ms, std::bind(&GroundTargetController::drive_loop, this));
+        RCLCPP_INFO(this->get_logger(), "Ground Wheeled Vehicle active. Commencing movement...");
     }
 
 private:
-
-    void cmd_callback(
-        const geometry_msgs::msg::Twist::SharedPtr msg)
-    {
-        RCLCPP_INFO(
-            this->get_logger(),
-            "Command received: linear %.2f angular %.2f",
-            msg->linear.x,
-            msg->angular.z);
+    void drive_loop() {
+        auto twist = geometry_msgs::msg::Twist();
+        twist.linear.x = 0.6;   // Forward cruise speed
+        twist.angular.z = 0.2;  // Safe arc turn rate
+        publisher_->publish(twist);
     }
-
-
-    void publish_status()
-    {
-        auto message =
-            std_msgs::msg::String();
-
-        message.data = "Motors online";
-
-        status_publisher_->publish(message);
-    }
-
-
-    double max_speed_;
-
-    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr
-        cmd_subscriber_;
-
-    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr
-        status_publisher_;
-
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
     rclcpp::TimerBase::SharedPtr timer_;
 };
 
-
-int main(int argc, char * argv[])
-{
+int main(int argc, char * argv[]) {
     rclcpp::init(argc, argv);
-
-    rclcpp::spin(
-        std::make_shared<MotorController>());
-
+    rclcpp::spin(std::make_shared<GroundTargetController>());
     rclcpp::shutdown();
-
     return 0;
 }

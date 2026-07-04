@@ -11,6 +11,7 @@ find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(nav_msgs REQUIRED) # ADD THIS LINE HERE
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -44,7 +45,7 @@ find_package(geometry_msgs REQUIRED)
 
 # Declare and build the executable binary node
 add_executable(vtol_flight_node src/vtol_flight_node.cpp)
-ament_target_dependencies(vtol_flight_node rclcpp geometry_msgs)
+ament_target_dependencies(vtol_flight_node rclcpp geometry_msgs nav_msgs)
 
 # Install the executable so ROS 2 can launch it
 install(TARGETS

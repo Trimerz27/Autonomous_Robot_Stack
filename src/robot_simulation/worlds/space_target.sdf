@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="space_target">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+
+    <!-- Light Source representing a distant star -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+    </light>
+
+    <!-- Ground Plane tinted to look like dark cosmic soil -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <material>
+            <ambient>0.15 0.15 0.16 1</ambient>
+            <diffuse>0.15 0.15 0.16 1</diffuse>
+            <specular>0.01 0.01 0.01 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ==================== WHEELED GROUND TARGET VEHICLE ==================== -->
+    <model name="ground_robot">
+      <pose>2.0 0.0 0.2 0 0 0</pose>
+      <static>false</static>
+      <link name="link">
+        <inertial>
+          <mass>5.0</mass>
+          <inertia>
+            <ixx>0.1</ixx><iyy>0.1</iyy><izz>0.1</izz>
+          </inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry><box><size>0.5 0.4 0.15</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.5 0.4 0.15</size></box></geometry>
+          <material>
+            <ambient>0.0 0.6 0.8 1.0</ambient>
+            <diffuse>0.0 0.6 0.8 1.0</diffuse>
+            <specular>1.0 1.0 1.0 1.0</specular>
+          </material>
+        </visual>
+        
+        <!-- Wheel Visual Additions -->
+        <visual name="wheel_fl"><pose>0.18 0.23 -0.05 1.5708 0 0</pose><geometry><cylinder><radius>0.1</radius><length>0.06</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
+        <visual name="wheel_fr"><pose>0.18 -0.23 -0.05 1.5708 0 0</pose><geometry><cylinder><radius>0.1</radius><length>0.06</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
+        <visual name="wheel_rl"><pose>-0.18 0.23 -0.05 1.5708 0 0</pose><geometry><cylinder><radius>0.1</radius><length>0.06</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
+        <visual name="wheel_rr"><pose>-0.18 -0.23 -0.05 1.5708 0 0</pose><geometry><cylinder><radius>0.1</radius><length>0.06</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
+      </link>
+
+      <plugin filename="gz-sim-velocity-control-system" name="gz::sim::systems::VelocityControl"><link_name>link</link_name></plugin>
+      <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher"><odom_frame>ground_robot/odom</odom_frame><robot_base_frame>link</robot_base_frame></plugin>
+    </model>
+
+  </world>
+</sdf>
+

@@ -14,14 +14,14 @@
       </geometry>
     </collision>
     <visual>
-      <origin xyz="0 0 0.4" rpy="1.5708 0 -3.1416"/>
+      <origin xyz="0 0 0.0" rpy="1.5708 0 -3.1416"/>
       <geometry>
         <mesh filename="file:///home/joel/robotics-portfolio/src/robot_description/meshes/x8_wing.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
   </link>
 
-  <!-- ==================== METALLIC SILVER FINISH ==================== -->
+  <!-- ==================== METALLIC SILVER FINISH & GRAVITY LOCK ==================== -->
   <gazebo reference="base_link">
     <visual>
       <material>
@@ -31,12 +31,21 @@
         <emissive>0.0 0.0 0.0 1.0</emissive>
       </material>
     </visual>
+    <!-- HARDWARE LOCK: Disables gravity so the jet hovers perfectly at its spawn altitude -->
+    <gravity>0</gravity>
   </gazebo>
 
-  <!-- ==================== MODERN GAZEBO SIM MOVEMENT ENGINE ==================== -->
+  <!-- ==================== WORKING GAZEBO SIM MOVEMENT ENGINE ==================== -->
   <gazebo>
-    <!-- The exact flight physics system required for ROS 2 Jazzy & Gazebo Sim -->
     <plugin filename="gz-sim-velocity-control-system" name="gz::sim::systems::VelocityControl">
+      <robot_base_frame>base_link</robot_base_frame>
+    </plugin>
+  </gazebo>
+
+  <!-- ==================== LIVE AERIAL TELEMETRY PUBLISHER ==================== -->
+  <gazebo>
+    <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+      <odom_frame>standard_vtol/odometry</odom_frame>
       <robot_base_frame>base_link</robot_base_frame>
     </plugin>
   </gazebo>
