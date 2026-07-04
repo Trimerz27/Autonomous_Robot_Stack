@@ -49,31 +49,26 @@ The long-term goal is to evolve this into a complete autonomous robot platform.
 ```text
 Autonomous_Robot_Stack/
 │
-├── src/
-│   │
-│   ├── robot_bringup/
-│   │   └── Launch and startup configuration
-│   │
-│   ├── robot_control/
-│   │   │
-│   │   └── src/
-│   │       └── motor_controller_node.cpp
-│   │
-│   ├── robot_description/
-│   │   │
-│   │   ├── urdf/
-│   │   │   └── inspection_robot.urdf.xacro
-│   │   │
-│   │   └── launch/
-│   │       └── display.launch.py
-│   │
-│   ├── robot_navigation/
-│   │   └── Navigation stack (planned)
-│   │
-│   └── robot_perception/
-│       └── Sensor processing (planned)
+Autonomous_Robot_Stack/
 │
-└── README.md
+└── src/
+    ├── robot_bringup/
+    │   └── launch/
+    │       └── vtol_simulation.launch.py   # Full system launch (Gz Sim + Robot State + Controllers)
+    │
+    ├── robot_control/
+    │   └── src/
+    │       ├── motor_controller_node.cpp    # Ground differential actuation hub
+    │       └── vtol_flight_node.cpp         # Autonomous 3D state machine flight controller (C++)
+    │
+    ├── robot_description/
+    │   ├── meshes/
+    │   │   └── x8_wing.dae                  # Metallic silver VTOL airframe CAD asset
+    │   └── urdf/
+    │       └── inspection_robot.urdf.xacro  # Level, scaled, 3D aerial kinematic configuration
+    │
+    ├── robot_navigation/                    # Navigation and behavioral tracking (planned)
+    └── robot_perception/                    # Live sensor pipelines and transformations (planned)
 ```
 
 ---
@@ -82,22 +77,17 @@ Autonomous_Robot_Stack/
 
 The current robot is a differential-drive style mobile platform.
 
-Current components:
+1. Ground Robotics Mode
+   Kinematic Framework: Differential-drive mobile platform.
+   Actuation Profiles: Twin isolated wheel joint velocity limits.
+   TF Structure:text
+   base_link / \ left_wheel right_wheel
 
-- Base chassis
-- Left wheel
-- Right wheel
-- Wheel joints
-- Robot coordinate frames
-
-TF structure:
-
-```text
-              base_link
-              /       \
-     left_wheel     right_wheel
-```
-
+2. Aerial Robotics Mode (VTOL Jet)
+   Airframe Asset: Highly detailed silver X8 flying wing fuselage mesh layout.
+   Spatial Constants: Scaled natively to metric workspace units (scale="0.001 0.001 0.001").
+   Default State: Starts level, parallel to the ground grid, elevated at a 2-foot floating altitude.
+   Simulation Physics: Controlled via the libgazebo_ros_planar_move.so 3D movement engine plugin.
 ---
 
 # ROS 2 Architecture
@@ -137,16 +127,25 @@ motor_controller_node
 
 - Ubuntu 24.04
 - ROS 2 Jazzy
-- colcon
+- Gazebo Sim (Modern ros_gz_sim components)
 
 ---
 
 ## Clone Repository
 
 ```bash
+# Clone the repository
 git clone https://github.com/Trimerz27/Autonomous_Robot_Stack.git
-
 cd Autonomous_Robot_Stack
+
+# Set up global ROS environment 
+source /opt/ros/jazzy/setup.zsh
+
+# Compile with developer symlink optimization
+colcon build --symlink-install
+
+# Source local package installations
+source install/setup.zsh
 ```
 
 ---
