@@ -14,8 +14,7 @@
       </geometry>
     </collision>
     <visual>
-      <!-- RE-BALANCED AXES MAP TO POSITION PLANE LEVEL AND FACING FORWARD -->
-      <origin xyz="0 0 0.4" rpy="1.5708 0 -1.5708"/>
+      <origin xyz="0 0 0.4" rpy="1.5708 0 -3.1416"/>
       <geometry>
         <mesh filename="file:///home/joel/robotics-portfolio/src/robot_description/meshes/x8_wing.dae" scale="0.001 0.001 0.001"/>
       </geometry>
@@ -34,15 +33,11 @@
     </visual>
   </gazebo>
 
-  <!-- ==================== GAZEBO ROS 3D MOVEMENT ENGINE ==================== -->
+  <!-- ==================== MODERN GAZEBO SIM MOVEMENT ENGINE ==================== -->
   <gazebo>
-    <plugin name="vtol_flight_core" filename="libgazebo_ros_planar_move.so">
-      <command_topic>cmd_vel</command_topic>
-      <odometry_topic>odom</odometry_topic>
-      <odometry_frame>odom</odometry_frame>
-      <odometry_rate>30.0</odometry_rate>
+    <!-- The exact flight physics system required for ROS 2 Jazzy & Gazebo Sim -->
+    <plugin filename="gz-sim-velocity-control-system" name="gz::sim::systems::VelocityControl">
       <robot_base_frame>base_link</robot_base_frame>
-      <publish_odometry_tf>true</publish_odometry_tf>
     </plugin>
   </gazebo>
 
